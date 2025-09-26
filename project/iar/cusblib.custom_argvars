@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iarUserArgVars>
+    <group name="cusblib" active="true">
+        <variable>
+            <name>USB_CFG_DIR</name>
+            <value>$WS_DIR$\..\..\configuration</value>
+        </variable>
+    </group>
+</iarUserArgVars>
