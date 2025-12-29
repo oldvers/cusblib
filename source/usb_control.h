@@ -31,6 +31,6 @@ typedef struct _USB_CORE_EVENTS
 /* USB Core Functions */
 void USBC_Init(const USB_CORE_EVENTS *pEvents);
 void USBC_Reset(void);
-void USBC_ControlInOut(U32 aEvent);
+void USBC_ControlInOut(U32 aParam, U32 aEvent);
 
 #endif  /* __USB_CONTROL_H__ */

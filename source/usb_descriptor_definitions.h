@@ -4,7 +4,7 @@
 #include "usb_control.h"
 
 typedef void (*USBD_CbGeneric)(void);
-typedef void (*USBD_CbEndPoint)(U32 aEvent);
+typedef void (*USBD_CbEndPoint)(U32 aParam, U32 aEvent);
 typedef USB_CTRL_STAGE (*USBD_CbControl)
 (
   USB_SETUP_PACKET *pSetup,
@@ -20,6 +20,7 @@ typedef struct
   USBD_CbGeneric  CbSOF;
   USBD_CbEndPoint CbEndPointI;
   USBD_CbEndPoint CbEndPointO;
+  U32             Param;
   U8              EndPointI;
   U8              EndPointO;
 } USBD_INTERFACE_CALLBACKS_DESCRIPTOR;

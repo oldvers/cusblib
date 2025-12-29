@@ -21,6 +21,6 @@ USB_CTRL_STAGE HID_CtrlOutReq
   U8 **pData,
   U16 *pSize
 );
-void HID_IrqInReq(U32 aEvent);
+void HID_IrqInReq(U32 aParam, U32 aEvent);
 
 #endif  /* __HID_H__ */

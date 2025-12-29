@@ -333,6 +333,7 @@ const USBD_INTERFACE_CALLBACKS_DESCRIPTOR
     .CbSOF       = NULL,
     .CbEndPointI = HID_IrqInReq,
     .CbEndPointO = NULL,
+    .Param       = 0,
     .EndPointI   = USB_ENDPOINT_I(USB_ENDPOINT_IDX_HID),
     .EndPointO   = 0,
   },

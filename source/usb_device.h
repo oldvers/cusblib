@@ -1,7 +1,7 @@
 #ifndef __USB_DEVICE_H__
 #define __USB_DEVICE_H__
 
-typedef void (*USBD_CbByte)(U8 * pByte);
+typedef void (*USBD_CbByte)(U32 aParam, U8 * pByte);
 
 /* --- Functions ------------------------------------------------------------ */
 

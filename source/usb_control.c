@@ -308,7 +308,7 @@ FW_BOOLEAN usbc_CtrlSetupReqStdGetDescriptor(void)
  *  @param pD - Pointer to Endpoint Descriptor
  *  @return None
  */
-void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD)
+void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD, U32 aParam)
 {
   USB_EP_TYPE t;
 
@@ -328,7 +328,7 @@ void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD)
       break;
   }
 
-  USB_EpConfigure(pD->bEndpointAddress, pD->wMaxPacketSize, t);
+  USB_EpConfigure(pD->bEndpointAddress, pD->wMaxPacketSize, t, aParam);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -339,7 +339,7 @@ void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD)
 FW_BOOLEAN usbc_CtrlSetupReqStdSetConfiguration(void)
 {
   USB_COMMON_DESCRIPTOR *pD;
-  U32                    alt, n, m;
+  U32                    alt, n, m, p;
   FW_BOOLEAN             result = FW_FALSE;
 
   if (REQUEST_TO_DEVICE == gCSetupPkt.bmRequestType.BM.Recipient)
@@ -406,8 +406,8 @@ FW_BOOLEAN usbc_CtrlSetupReqStdSetConfiguration(void)
                     ((1 << USB_EP_QUANTITY) << (n & USB_EP_NUM_MASK)) :
                      (1 << n);
               gEndPointMask |= m;
-
-              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD);
+              p = USBD_IfCbDescriptor[n & USB_EP_NUM_MASK].Param;
+              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD, p);
               USB_EpEnable(n);
               USB_EpReset(n);
             }
@@ -457,7 +457,7 @@ FW_BOOLEAN usbc_CtrlSetupReqStdSetConfiguration(void)
 FW_BOOLEAN usbc_CtrlSetupReqStdSetInterface(void)
 {
   USB_COMMON_DESCRIPTOR *pD;
-  U32                    ifn, alt, old, msk, n, m;
+  U32                    ifn, alt, old, msk, n, m, p;
   FW_BOOLEAN             result = FW_FALSE;
 
   if (gConfiguration == 0) return result;
@@ -503,7 +503,8 @@ FW_BOOLEAN usbc_CtrlSetupReqStdSetInterface(void)
             {
               gEndPointMask |=  m;
               gEndPointHalt &= ~m;
-              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD);
+              p = USBD_IfCbDescriptor[n & USB_EP_NUM_MASK].Param;
+              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD, p);
               USB_EpEnable(n);
               USB_EpReset(n);
               msk |= m;
@@ -655,7 +656,7 @@ FW_BOOLEAN usbc_CtrlOutReqClass(void)
  *  @param aEvent - Event
  *  @return None
  */
-void USBC_ControlInOut(U32 aEvent)
+void USBC_ControlInOut(U32 aParam, U32 aEvent)
 {
   FW_BOOLEAN result = FW_FALSE;
 
