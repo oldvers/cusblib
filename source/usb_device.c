@@ -265,8 +265,8 @@ void USBD_Init(void)
   USB_Init(USB_CTRL_PACKET_SIZE);
 
   /* Register Callback for Control Endpoint */
-  USB_SetCb_Ep(EP0_O, USBC_ControlInOut);
-  USB_SetCb_Ep(EP0_I, USBC_ControlInOut);
+  USB_SetCb_Ep(EP0_O, USBC_ControlInOut, 0);
+  USB_SetCb_Ep(EP0_I, USBC_ControlInOut, 0);
 
   /* Class Specific Init */
   for (i = 0; i < USBD_GetItrfacesCount(); i++)
@@ -277,7 +277,8 @@ void USBD_Init(void)
       USB_SetCb_Ep
       (
         USBD_IfCbDescriptor[i].EndPointI,
-        USBD_IfCbDescriptor[i].CbEndPointI
+        USBD_IfCbDescriptor[i].CbEndPointI,
+        USBD_IfCbDescriptor[i].Param
       );
     }
     if (NULL != USBD_IfCbDescriptor[i].CbEndPointO)
@@ -285,7 +286,8 @@ void USBD_Init(void)
       USB_SetCb_Ep
       (
         USBD_IfCbDescriptor[i].EndPointO,
-        USBD_IfCbDescriptor[i].CbEndPointO
+        USBD_IfCbDescriptor[i].CbEndPointO,
+        USBD_IfCbDescriptor[i].Param
       );
     }
 

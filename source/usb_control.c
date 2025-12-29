@@ -308,7 +308,7 @@ FW_BOOLEAN usbc_CtrlSetupReqStdGetDescriptor(void)
  *  @param pD - Pointer to Endpoint Descriptor
  *  @return None
  */
-void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD, U32 aParam)
+void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD)
 {
   USB_EP_TYPE t;
 
@@ -328,7 +328,7 @@ void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD, U32 aParam)
       break;
   }
 
-  USB_EpConfigure(pD->bEndpointAddress, pD->wMaxPacketSize, t, aParam);
+  USB_EpConfigure(pD->bEndpointAddress, pD->wMaxPacketSize, t);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -339,7 +339,7 @@ void usbc_EpConfig(USB_ENDPOINT_DESCRIPTOR * pD, U32 aParam)
 FW_BOOLEAN usbc_CtrlSetupReqStdSetConfiguration(void)
 {
   USB_COMMON_DESCRIPTOR *pD;
-  U32                    alt, n, m, p;
+  U32                    alt, n, m;
   FW_BOOLEAN             result = FW_FALSE;
 
   if (REQUEST_TO_DEVICE == gCSetupPkt.bmRequestType.BM.Recipient)
@@ -406,8 +406,7 @@ FW_BOOLEAN usbc_CtrlSetupReqStdSetConfiguration(void)
                     ((1 << USB_EP_QUANTITY) << (n & USB_EP_NUM_MASK)) :
                      (1 << n);
               gEndPointMask |= m;
-              p = USBD_IfCbDescriptor[n & USB_EP_NUM_MASK].Param;
-              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD, p);
+              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD);
               USB_EpEnable(n);
               USB_EpReset(n);
             }
@@ -457,7 +456,7 @@ FW_BOOLEAN usbc_CtrlSetupReqStdSetConfiguration(void)
 FW_BOOLEAN usbc_CtrlSetupReqStdSetInterface(void)
 {
   USB_COMMON_DESCRIPTOR *pD;
-  U32                    ifn, alt, old, msk, n, m, p;
+  U32                    ifn, alt, old, msk, n, m;
   FW_BOOLEAN             result = FW_FALSE;
 
   if (gConfiguration == 0) return result;
@@ -503,8 +502,7 @@ FW_BOOLEAN usbc_CtrlSetupReqStdSetInterface(void)
             {
               gEndPointMask |=  m;
               gEndPointHalt &= ~m;
-              p = USBD_IfCbDescriptor[n & USB_EP_NUM_MASK].Param;
-              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD, p);
+              usbc_EpConfig((USB_ENDPOINT_DESCRIPTOR *)pD);
               USB_EpEnable(n);
               USB_EpReset(n);
               msk |= m;
